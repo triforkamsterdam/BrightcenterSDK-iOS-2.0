@@ -86,7 +86,7 @@ The assessmentId can also be `@""` (empty). When the brightcenter app opens your
 after this method is called you are able to send and retrieve results!
 
 ##Retrieving results
-To retrieve a result you can use the following:
+To retrieve a result you can use the following(note that your class needs to implement the ResultControllerDelegate protocol):
 ```objective-c
     BCAResultController *resultController = [BCAResultController instance];
     resultController.resultControllerDelegate = self;
