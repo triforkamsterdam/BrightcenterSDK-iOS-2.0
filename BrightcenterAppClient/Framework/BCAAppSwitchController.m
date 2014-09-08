@@ -10,12 +10,15 @@
 
 @implementation BCAAppSwitchController
 
-- (id) init{
-    self = [super init];
-    if (self) {
-        _resultController = [BCAResultController instance];
++ (BCAAppSwitchController *) instance{
+    static BCAAppSwitchController *_instance = nil;
+    @synchronized(self){
+        if (_instance == nil) {
+            _instance = [[self alloc] init];
+            _instance.resultController = [BCAResultController instance];
+        }
     }
-    return self;
+    return _instance;
 }
 
 - (void) openBrightcenterAppWithAssessmentId:(NSString *) assessmentId urlScheme:(NSString *) urlScheme{

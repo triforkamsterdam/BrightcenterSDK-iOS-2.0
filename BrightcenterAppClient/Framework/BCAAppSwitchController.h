@@ -22,5 +22,6 @@
 
 - (void) openBrightcenterAppWithAssessmentId:(NSString *) assessmentId urlScheme:(NSString *) urlScheme;
 - (void) configureWithUrl:(NSURL *) url;
++ (BCAAppSwitchController *) instance;
 
 @end

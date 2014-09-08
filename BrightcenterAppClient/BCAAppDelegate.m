@@ -24,7 +24,7 @@
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     
-    BCAAppSwitchController *appSwitchController = [[BCAAppSwitchController alloc] init];
+    BCAAppSwitchController *appSwitchController = [BCAAppSwitchController instance];
     [appSwitchController configureWithUrl:url];
     return YES;
 }

@@ -12,7 +12,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *studentLabel;
 @property (nonatomic, strong) BCAResultController *resultController;
-
+@property (nonatomic, strong) BCAAppSwitchController *appSwitchController;
 @end
 
 @implementation BCAMainViewController
@@ -40,20 +40,20 @@
     // Dispose of any resources that can be recreated.
 }
 - (IBAction)connectButtonClicked:(id)sender {
-    BCAAppSwitchController *appSwitchController = [[BCAAppSwitchController alloc] init];
-    appSwitchController.appSwitchDelegate = self;
-    [appSwitchController openBrightcenterAppWithAssessmentId:@"342f6bff-44bd-4a2b-82d3-790b73c5200c" urlScheme:@"brightcenterAppClient"];
+    _appSwitchController = [BCAAppSwitchController instance];
+    _appSwitchController.appSwitchDelegate = self;
+    [_appSwitchController openBrightcenterAppWithAssessmentId:@"342f6bff-44bd-4a2b-82d3-790b73c5200c" urlScheme:@"brightcenterAppClient"];
 }
 
 - (IBAction)loadResultsButtonClicked:(id)sender {
-    [_resultController loadResultsForAssessment:@"987-654-321"];
+    [_resultController loadResultsForAssessment:@"342f6bff-44bd-4a2b-82d3-790b73c5200c"];
 }
 
 - (IBAction)postResultButtonClicked:(id)sender {
     [_resultController sendResultWithScore:4.0 duration:11 completionStatus:@"INCOMPLETE" assessmentId:@"342f6bff-44bd-4a2b-82d3-790b73c5200c" questionId:@"1"];
 }
 - (IBAction)connectWithoutAssessmentClicked:(id)sender {
-    BCAAppSwitchController *appSwitchController = [[BCAAppSwitchController alloc] init];
+    BCAAppSwitchController *appSwitchController = [BCAAppSwitchController instance];
     appSwitchController.appSwitchDelegate = self;
     [appSwitchController openBrightcenterAppWithAssessmentId:@"" urlScheme:@"brightcenterAppClient"];
 }

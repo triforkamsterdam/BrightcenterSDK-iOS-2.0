@@ -54,9 +54,9 @@
     };
     
     void (^httpFailure)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id o) {
-        NSLog(@"%d", response.statusCode);
+        NSLog(@"%ld", response.statusCode);
         if([self.resultControllerDelegate respondsToSelector:@selector(networkError:)]){
-            [self.resultControllerDelegate networkError:response.statusCode];
+            [self.resultControllerDelegate networkError:(int)response.statusCode];
         }
     };
     
