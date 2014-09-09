@@ -27,6 +27,7 @@
 		1D3F6EEA193DFC6F0044B1E9 /* BrightcenterAppClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3F6EE9193DFC6F0044B1E9 /* BrightcenterAppClientTests.m */; };
 		1D3F6EF4193DFC830044B1E9 /* ipadStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1D3F6EF3193DFC830044B1E9 /* ipadStoryboard.storyboard */; };
 		1D3F6EF7193DFCE00044B1E9 /* BCAMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3F6EF6193DFCE00044B1E9 /* BCAMainViewController.m */; };
+		1DBA93AD19BDF62D002A0990 /* BCALogoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DBA93AC19BDF62D002A0990 /* BCALogoButton.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,8 @@
 		1D3F6EF3193DFC830044B1E9 /* ipadStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ipadStoryboard.storyboard; sourceTree = "<group>"; };
 		1D3F6EF5193DFCE00044B1E9 /* BCAMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCAMainViewController.h; sourceTree = "<group>"; };
 		1D3F6EF6193DFCE00044B1E9 /* BCAMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCAMainViewController.m; sourceTree = "<group>"; };
+		1DBA93AB19BDF62D002A0990 /* BCALogoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BCALogoButton.h; path = Framework/BCALogoButton.h; sourceTree = "<group>"; };
+		1DBA93AC19BDF62D002A0990 /* BCALogoButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BCALogoButton.m; path = Framework/BCALogoButton.m; sourceTree = "<group>"; };
 		3691EE91B07F46DA953959A6 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		B5DF7C0487A14BDC86AA4C84 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -111,6 +114,8 @@
 				1D13954D19BDC66F0068A40F /* BCStudent.m */,
 				1D13954E19BDC66F0068A40F /* NSObject+JsonUtils.h */,
 				1D13954F19BDC66F0068A40F /* NSObject+JsonUtils.m */,
+				1DBA93AB19BDF62D002A0990 /* BCALogoButton.h */,
+				1DBA93AC19BDF62D002A0990 /* BCALogoButton.m */,
 			);
 			name = Framework;
 			sourceTree = "<group>";
@@ -327,6 +332,7 @@
 				1D13955319BDC66F0068A40F /* BCStudent.m in Sources */,
 				1D3F6ED1193DFC6F0044B1E9 /* main.m in Sources */,
 				1D3F6ED5193DFC6F0044B1E9 /* BCAAppDelegate.m in Sources */,
+				1DBA93AD19BDF62D002A0990 /* BCALogoButton.m in Sources */,
 				1D13955119BDC66F0068A40F /* BCAResultController.m in Sources */,
 				1D13955419BDC66F0068A40F /* NSObject+JsonUtils.m in Sources */,
 				1D13955219BDC66F0068A40F /* BCAssessmentItemResult.m in Sources */,

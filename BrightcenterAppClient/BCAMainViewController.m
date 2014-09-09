@@ -7,6 +7,7 @@
 //
 
 #import "BCAMainViewController.h"
+#import "BCALogoButton.h"
 
 @interface BCAMainViewController ()
 
@@ -32,6 +33,8 @@
     NSLog(@"mainviewcontroller");
     _resultController = [BCAResultController instance];
     _resultController.resultControllerDelegate = self;
+    BCALogoButton *logo = [BCALogoButton createButtonWithDelegate:self assessmentId: @"342f6bff-44bd-4a2b-82d3-790b73c5200c" urlScheme:@"brightcenterAppClient"];
+    [self.view addSubview:logo];
 }
 
 - (void)didReceiveMemoryWarning
