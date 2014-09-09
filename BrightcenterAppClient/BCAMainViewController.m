@@ -98,6 +98,7 @@
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
     self.logoButton = [BCALogoButton createButtonWithDelegate:self assessmentId: @"342f6bff-44bd-4a2b-82d3-790b73c5200c" urlScheme:@"brightcenterAppClient"];
     [self.view addSubview:self.logoButton];
+    
 }
 
 
