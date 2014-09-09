@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *studentLabel;
 @property (nonatomic, strong) BCAResultController *resultController;
 @property (nonatomic, strong) BCAAppSwitchController *appSwitchController;
+@property (nonatomic, strong) BCALogoButton *logoButton;
 @end
 
 @implementation BCAMainViewController
@@ -33,8 +34,8 @@
     NSLog(@"mainviewcontroller");
     _resultController = [BCAResultController instance];
     _resultController.resultControllerDelegate = self;
-    BCALogoButton *logo = [BCALogoButton createButtonWithDelegate:self assessmentId: @"342f6bff-44bd-4a2b-82d3-790b73c5200c" urlScheme:@"brightcenterAppClient"];
-    [self.view addSubview:logo];
+    self.logoButton = [BCALogoButton createButtonWithDelegate:self assessmentId: @"342f6bff-44bd-4a2b-82d3-790b73c5200c" urlScheme:@"brightcenterAppClient"];
+    [self.view addSubview:self.logoButton];
 }
 
 - (void)didReceiveMemoryWarning
@@ -83,6 +84,21 @@
     NSLog(@"result send correctly");
 }
 
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    for (UIView *subView in self.view.subviews)
+    {
+        if (subView.tag == 1337)
+        {
+            NSLog(@"removing");
+            [subView removeFromSuperview];
+        }
+    }
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    self.logoButton = [BCALogoButton createButtonWithDelegate:self assessmentId: @"342f6bff-44bd-4a2b-82d3-790b73c5200c" urlScheme:@"brightcenterAppClient"];
+    [self.view addSubview:self.logoButton];
+}
 
 
 

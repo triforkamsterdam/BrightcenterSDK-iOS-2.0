@@ -46,6 +46,7 @@
     [button addSubview:[button createCircleWithX:120 Y:120 size:40 color:[UIColor whiteColor]]];
     [button addTarget:nil action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     
+    button.tag = 1337;
     return button;
 }
 
