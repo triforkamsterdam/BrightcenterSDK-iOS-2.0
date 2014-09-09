@@ -138,6 +138,36 @@ When something goes wrong the following delegate will be called:
 These are the common exceptions but feel free to add in whatever you want!
 
 
+##Brightcenter Logo button
+We have also created a logo button that will be placed in the lower right corner of your app. To use this button you can call the following method:
+```objective-c
+BCALogoButton *logoButton = [BCALogoButton createButtonWithDelegate:self assessmentId:@"YOUR ASSESSMENTID" urlScheme:@"YOURURLSCHEME"];
+    [self.view addSubview:self.logoButton];
+```
+
+To add the right behaviour after a screen rotation you can use the following two functions:
+```objective-c
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    for (UIView *subView in self.view.subviews)
+    {
+        if (subView.tag == 1337)
+        {
+            [subView removeFromSuperview];
+        }
+    }
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    BCALogoButton *logoButton = [BCALogoButton createButtonWithDelegate:self assessmentId:@"YOUR ASSESSMENTID" urlScheme:@"YOURURLSCHEME"];
+    [self.view addSubview:self.logoButton];
+}
+```
+
+This will make sure the button is always in the lower right corner.
+As usual the `- (void) appIsOpened` function will be called after the appswitch.
+
+
+
 ##Examples
 For examples check out this project. It contains everything you need for a working app.
 
