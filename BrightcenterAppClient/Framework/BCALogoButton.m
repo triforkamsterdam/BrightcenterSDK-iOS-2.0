@@ -29,8 +29,8 @@
     
     
     if(UIDeviceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)){
-        screenWidth = screenRect.size.width;
-        screenHeight = screenRect.size.height;
+        screenWidth = screenRect.size.height;
+        screenHeight = screenRect.size.width;
         frame = CGRectMake(screenWidth - 225, screenHeight - 225, 300, 300);
     }else{
         screenHeight = screenRect.size.width;
