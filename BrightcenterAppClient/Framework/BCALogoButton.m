@@ -56,7 +56,6 @@
         BCAAppSwitchController *appSwitchController = [BCAAppSwitchController instance];
         appSwitchController.appSwitchDelegate = self.appSwitchDelegate;
         [appSwitchController openBrightcenterAppWithAssessmentId:self.assessmentId urlScheme:self.urlScheme];
-        
     }
 }
 

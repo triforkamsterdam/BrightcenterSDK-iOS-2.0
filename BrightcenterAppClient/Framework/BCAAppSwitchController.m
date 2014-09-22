@@ -24,7 +24,27 @@
 - (void) openBrightcenterAppWithAssessmentId:(NSString *) assessmentId urlScheme:(NSString *) urlScheme{
     NSString *urlString = [NSString stringWithFormat:@"brightcenterApp://protocolName/%@/assessmentId/%@", urlScheme, assessmentId];
     NSURL *url = [NSURL URLWithString:urlString];
-    [[UIApplication sharedApplication] openURL:url];
+    if([[UIApplication sharedApplication] canOpenURL:url]){
+        [[UIApplication sharedApplication] openURL:url];
+    }else{
+        UIAlertView *alert;
+        NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
+        NSString *message;
+        if([language isEqualToString:@"nl"]){
+            message = @"De Brightcenter app is niet geinstalleerd op dit apparaat. Installeer deze om Brightcenter functionaliteiten te gebruiken.";
+            alert = [[UIAlertView alloc] initWithTitle:@"Waarschuwing" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"Openen in Appstore",nil];
+        }else{
+            message = @"You don't have the Brightcenter App installed on this device. Please install it to use Brightcenter functionality.";
+            alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"Open in Appstore", nil];
+        }
+        [alert show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1){
+        //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"URL NEEDS TO BE REPLACED WHEN IN PRODUCTION"]];
+    }
 }
 
 - (void) configureWithUrl:(NSURL *) url{
