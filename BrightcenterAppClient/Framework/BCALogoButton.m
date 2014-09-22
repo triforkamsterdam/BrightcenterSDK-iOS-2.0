@@ -17,7 +17,6 @@
     button.assessmentId = assessmentId;
     
     button.backgroundColor = [UIColor whiteColor];
-    [button setTitle:@"testbutton" forState:UIControlStateNormal];
     button.layer.cornerRadius = 150;
     
     CGRect screenRect = [[UIScreen mainScreen] bounds];
@@ -28,16 +27,18 @@
     NSLog(@"width: %f height: %f", screenWidth, screenHeight);
     
     
-    if(UIDeviceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)){
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    
+    if(UIDeviceOrientationLandscapeLeft == orientation || UIDeviceOrientationLandscapeRight == orientation){
         screenWidth = screenRect.size.height;
         screenHeight = screenRect.size.width;
         frame = CGRectMake(screenWidth - 225, screenHeight - 225, 300, 300);
     }else{
-        screenHeight = screenRect.size.width;
-        screenWidth = screenRect.size.height;
-        frame = CGRectMake(screenWidth - 500, screenHeight, 300, 300);
+        screenHeight = screenRect.size.height;
+        screenWidth = screenRect.size.width;
+        frame = CGRectMake(screenWidth - 225, screenHeight - 225, 300, 300);
     }
-    NSLog(@"%f %f", frame.origin.x, frame.origin.y);
+    NSLog(@"origin: %f %f", frame.origin.x, frame.origin.y);
     button.frame = frame;
     
     [button addSubview:[button createCircleWithX:75 Y:75 size:130 color:[UIColor orangeColor]]];
@@ -50,10 +51,30 @@
     return button;
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1){
+        BCAAppSwitchController *appSwitchController = [BCAAppSwitchController instance];
+        appSwitchController.appSwitchDelegate = self.appSwitchDelegate;
+        [appSwitchController openBrightcenterAppWithAssessmentId:self.assessmentId urlScheme:self.urlScheme];
+        
+    }
+}
+
 - (void) buttonAction:(BCALogoButton *) button{
-    BCAAppSwitchController *appSwitchController = [BCAAppSwitchController instance];
-    appSwitchController.appSwitchDelegate = button.appSwitchDelegate;
-    [appSwitchController openBrightcenterAppWithAssessmentId:button.assessmentId urlScheme:button.urlScheme];
+    self.appSwitchDelegate = button.appSwitchDelegate;
+    self.assessmentId = button.assessmentId;
+    self.urlScheme = button.urlScheme;
+    NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
+    NSString *message;
+    UIAlertView *alert;
+    if([language isEqualToString:@"nl"]){
+        message = @"Je staat op het punt om in te loggen bij Brightcenter, hiervoor is een account nodig. Wil je doorgaan?";
+        alert = [[UIAlertView alloc] initWithTitle:@"Waarschuwing" message:message delegate:self cancelButtonTitle:@"Nee" otherButtonTitles:@"Ja", nil];
+    }else{
+        message = @"You are about to login to Brightcenter, you'll need an account to do this. Are you sure you want to continue?";
+        alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:message delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+    }
+    [alert show];
 }
 
 - (UIImageView *) createCircleWithX:(int) x Y:(int) y size:(int) size color:(UIColor *) color{
