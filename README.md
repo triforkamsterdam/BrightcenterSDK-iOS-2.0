@@ -1,11 +1,12 @@
 BrightcenterSDK-iOS-2.0
 =======================
 
-This SDK makes it easier to communicate with Brightcenter. It uses an appswitch to retrieve the student that is logged in.
+This SDK makes it easier to communicate with Brightcenter. It uses an appswitch to retrieve the student that is logged in. 
 
 ##Register your appUrl
 When you register or edit an assessment you can change your appUrl. your appUrl needs to be the same as your CFBundleURLSchemes. If you register your appUrl you can generate a test link on: www.brightcenter.nl/dashboard/createSdkUrl . There you can select your app and a student and your link will be generated. If you open this link on a device or simulator your app will be opened.
 When the BrightcenterApp is finished it'll open your app in the same way.
+WARNING: The brightcenter app is not available yet, so the app switch won't work. The app is coming very soon!
 
 ## Install cocoapods
 
@@ -23,8 +24,8 @@ See also: http://cocoapods.org
 
 Go to your XCode project directory and create a text file called `PodFile` with the following contents:
 
-    platform :ios, '5.0'
-    pod 'BrightCenterSDK', '~> 1.2'
+    platform :ios, '7.0'
+    pod 'BrightcenterSDK-2.0',  '~> 0.9.04'
 
 Now open a terminal and change to your XCode project directory. Run the command `pod install`. That's it!
 Open the generated YourApp.xcworkspace file with XCode or AppCode (instead of YourApp.xcodeproj).
@@ -136,6 +137,36 @@ When something goes wrong the following delegate will be called:
 }
 ```
 These are the common exceptions but feel free to add in whatever you want!
+
+
+##Brightcenter Logo button
+We have also created a logo button that will be placed in the lower right corner of your app. To use this button you can call the following method:
+```objective-c
+BCALogoButton *logoButton = [BCALogoButton createButtonWithDelegate:self assessmentId:@"YOUR ASSESSMENTID" urlScheme:@"YOURURLSCHEME"];
+    [self.view addSubview:self.logoButton];
+```
+
+To add the right behaviour after a screen rotation you can use the following two functions:
+```objective-c
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    for (UIView *subView in self.view.subviews)
+    {
+        if (subView.tag == 1337)
+        {
+            [subView removeFromSuperview];
+        }
+    }
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    BCALogoButton *logoButton = [BCALogoButton createButtonWithDelegate:self assessmentId:@"YOUR ASSESSMENTID" urlScheme:@"YOURURLSCHEME"];
+    [self.view addSubview:self.logoButton];
+}
+```
+
+This will make sure the button is always in the lower right corner.
+As usual the `- (void) appIsOpened` function will be called after the appswitch.
+
 
 
 ##Examples
