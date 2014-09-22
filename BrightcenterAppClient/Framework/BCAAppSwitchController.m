@@ -28,8 +28,6 @@
 }
 
 - (void) configureWithUrl:(NSURL *) url{
-    NSLog(@"scheme: %@", [url scheme]);
-    NSLog(@"path: %@", [url path]);
     _resultController.cookieString = [NSString stringWithFormat:@"JSESSIONID=%@", [self getCookieFromUrlString:[url path]]];
     _resultController.assessmentIdFromUrl = [self getAssessmentIdFromUrlString:[url path]];
     

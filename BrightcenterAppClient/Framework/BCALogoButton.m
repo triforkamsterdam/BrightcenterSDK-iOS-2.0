@@ -17,34 +17,34 @@
     button.assessmentId = assessmentId;
     
     button.backgroundColor = [UIColor whiteColor];
-    button.layer.cornerRadius = 150;
+    button.layer.cornerRadius = 120;
     
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
     CGRect frame;
     
-    NSLog(@"width: %f height: %f", screenWidth, screenHeight);
-    
-    
     UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
     
     if(UIDeviceOrientationLandscapeLeft == orientation || UIDeviceOrientationLandscapeRight == orientation){
         screenWidth = screenRect.size.height;
         screenHeight = screenRect.size.width;
-        frame = CGRectMake(screenWidth - 225, screenHeight - 225, 300, 300);
+        frame = CGRectMake(screenWidth - 200, screenHeight - 200, 240, 240);
     }else{
         screenHeight = screenRect.size.height;
         screenWidth = screenRect.size.width;
-        frame = CGRectMake(screenWidth - 225, screenHeight - 225, 300, 300);
+        frame = CGRectMake(screenWidth - 200, screenHeight - 200, 240, 240);
     }
-    NSLog(@"origin: %f %f", frame.origin.x, frame.origin.y);
     button.frame = frame;
     
-    [button addSubview:[button createCircleWithX:75 Y:75 size:130 color:[UIColor orangeColor]]];
-    [button addSubview:[button createCircleWithX:90 Y:90 size:100 color:[UIColor whiteColor]]];
-    [button addSubview:[button createCircleWithX:105 Y:105 size:70 color:[UIColor orangeColor]]];
-    [button addSubview:[button createCircleWithX:120 Y:120 size:40 color:[UIColor whiteColor]]];
+    int baseOrigin = 50;
+    int stepSize = 30;
+    int baseSize = 130;
+    
+    [button addSubview:[button createCircleWithX:baseOrigin Y:baseOrigin size:baseSize color:[UIColor orangeColor]]];
+    [button addSubview:[button createCircleWithX:baseOrigin + (stepSize / 2) Y:baseOrigin + (stepSize / 2) size:baseSize - stepSize color:[UIColor whiteColor]]];
+    [button addSubview:[button createCircleWithX:baseOrigin + (stepSize) Y:baseOrigin + (stepSize) size:baseSize - (stepSize*2) color:[UIColor orangeColor]]];
+    [button addSubview:[button createCircleWithX:baseOrigin + (stepSize * 1.5) Y:baseOrigin + (1.5 * stepSize) size:baseSize - (stepSize*3) color:[UIColor whiteColor]]];
     [button addTarget:nil action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     
     button.tag = 1337;

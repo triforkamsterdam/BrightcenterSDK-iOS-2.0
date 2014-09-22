@@ -54,7 +54,6 @@
     };
     
     void (^httpFailure)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id o) {
-        NSLog(@"%ld", response.statusCode);
         if([self.resultControllerDelegate respondsToSelector:@selector(networkError:)]){
             [self.resultControllerDelegate networkError:(int)response.statusCode];
         }
@@ -115,7 +114,6 @@
     };
     
     void (^httpFailure)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id o) {
-        NSLog(@"%d", response.statusCode);
         if([self.resultControllerDelegate respondsToSelector:@selector(networkError:)]){
             [self.resultControllerDelegate networkError:response.statusCode];
         }
