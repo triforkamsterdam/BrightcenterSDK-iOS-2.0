@@ -5,7 +5,7 @@ This SDK makes it easier to communicate with Brightcenter. It uses an appswitch 
 
 ##Register your appUrl
 When you register or edit an assessment you can change your appUrl. your appUrl needs to be the same as your CFBundleURLSchemes. If you register your appUrl you can generate a test link on: www.brightcenter.nl/dashboard/createSdkUrl . There you can select your app and a student and your link will be generated. If you open this link on a device or simulator your app will be opened.
-When the BrightcenterApp is finished it'll open your app in the same way.
+When the Brightcenter app is finished it'll open your app in the same way.
 WARNING: The brightcenter app is not available yet, so the app switch won't work. The app is coming very soon!
 
 ## Install cocoapods
