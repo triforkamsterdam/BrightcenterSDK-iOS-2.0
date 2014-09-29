@@ -80,11 +80,11 @@ To open the brightcenter app you can use the following(note that you must implem
 ```
 The assessmentId can also be `@""` (empty). When the brightcenter app opens your application, the following delegate method is called:
 ```objective-c
-- (void) appIsOpened{
+- (void) appIsOpened:(NSString *) assessmentId{
   // The student is available from here you can use: 'resultController.student'
 }
 ```
-after this method is called you are able to send and retrieve results!
+after this method is called you are able to send and retrieve results! The assessmentId can be used to load an assessment instantly, note that it could also be nil if a student didn't pick a specific assessment. It can be ignored.
 
 ##Retrieving results
 To retrieve a result you can use the following(note that your class needs to implement the ResultControllerDelegate protocol):
