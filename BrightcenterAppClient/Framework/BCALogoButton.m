@@ -19,23 +19,10 @@
     button.backgroundColor = [UIColor whiteColor];
     button.layer.cornerRadius = 120;
     
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGRect screenRect = CGRectMake(0, 0, [button screenSize].width, [button screenSize].height);
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
-    CGRect frame;
-    
-    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-    
-    if(UIDeviceOrientationLandscapeLeft == orientation || UIDeviceOrientationLandscapeRight == orientation){
-        screenWidth = screenRect.size.height;
-        screenHeight = screenRect.size.width;
-        frame = CGRectMake(screenWidth - 200, screenHeight - 200, 240, 240);
-    }else{
-        screenHeight = screenRect.size.height;
-        screenWidth = screenRect.size.width;
-        frame = CGRectMake(screenWidth - 200, screenHeight - 200, 240, 240);
-    }
-    button.frame = frame;
+    button.frame = CGRectMake(screenWidth - 200, screenHeight - 200, 240, 240);;
     
     int baseOrigin = 50;
     int stepSize = 30;
@@ -101,6 +88,15 @@
     UIImageView *imageView = [[UIImageView alloc] initWithImage:img];
     
     return imageView;
+}
+
+- (CGSize)screenSize {
+    CGSize screenSize = [UIScreen mainScreen].bounds.size;
+    if ((NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1) && UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+        return CGSizeMake(screenSize.height, screenSize.width);
+    } else {
+        return screenSize;
+    }
 }
 
 @end
