@@ -34,7 +34,7 @@
     NSLog(@"mainviewcontroller");
     _resultController = [BCAResultController instance];
     _resultController.resultControllerDelegate = self;
-    self.logoButton = [BCALogoButton createButtonWithDelegate:self assessmentId: @"342f6bff-44bd-4a2b-82d3-790b73c5200c" urlScheme:@"brightcenterAppClient1"];
+    self.logoButton = [BCALogoButton createButtonWithDelegate:self assessmentId: nil urlScheme:@"brightcenterAppClient"];
     [self.view addSubview:self.logoButton];
 }
 
@@ -62,9 +62,9 @@
     [appSwitchController openBrightcenterAppWithAssessmentId:@"" urlScheme:@"brightcenterAppClient"];
 }
 
-- (void) appIsOpened{
+- (void) appIsOpened:(NSString *) assessmentId{
     NSLog(@"app is opened");
-    _studentLabel.text = [NSString stringWithFormat:@"Student: %@ %@ %@\n %@ %@", _resultController.student.firstName, _resultController.student.lastName, _resultController.student.id, _resultController.cookieString, _resultController.assessmentIdFromUrl];
+    _studentLabel.text = [NSString stringWithFormat:@"Student: %@ %@ %@\n %@ %@", _resultController.student.firstName, _resultController.student.lastName, _resultController.student.id, _resultController.cookieString, assessmentId];
 }
 
 - (void) resultsAreLoaded:(NSArray *) results{
@@ -96,7 +96,7 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-    self.logoButton = [BCALogoButton createButtonWithDelegate:self assessmentId: @"342f6bff-44bd-4a2b-82d3-790b73c5200c" urlScheme:@"brightcenterAppClient"];
+    self.logoButton = [BCALogoButton createButtonWithDelegate:self assessmentId:nil urlScheme:@"brightcenterAppClient"];
     [self.view addSubview:self.logoButton];
     
 }

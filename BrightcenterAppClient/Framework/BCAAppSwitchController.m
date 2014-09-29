@@ -57,7 +57,7 @@
     
     
     _resultController.student = [[BCStudent alloc] initWithId:[dict valueForKey:@"personId"] firstName:[dict valueForKey:@"firstName"] lastName:[dict valueForKey:@"lastName"]];
-    [self.appSwitchDelegate appIsOpened];
+    [self.appSwitchDelegate appIsOpened: _resultController.assessmentIdFromUrl];
 }
 
 - (NSString *) getDataStringFromUrlString:(NSString *) path{

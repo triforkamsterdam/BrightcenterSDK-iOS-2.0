@@ -11,7 +11,7 @@
 
 @protocol AppSwitchDelegate <NSObject>
 @required
-- (void) appIsOpened;
+- (void) appIsOpened:(NSString *) assessmentId;
 @end
 
 @interface BCAAppSwitchController : NSObject
