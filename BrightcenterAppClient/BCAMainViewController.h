@@ -12,6 +12,6 @@
 
 
 
-@interface BCAMainViewController : UIViewController <ResultControllerDelegate, AppSwitchDelegate>
+@interface BCAMainViewController : UIViewController <AppSwitchDelegate>
 
 @end

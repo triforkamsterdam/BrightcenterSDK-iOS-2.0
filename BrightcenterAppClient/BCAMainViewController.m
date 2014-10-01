@@ -33,7 +33,6 @@
     [super viewDidLoad];
     NSLog(@"mainviewcontroller");
     _resultController = [BCAResultController instance];
-    _resultController.resultControllerDelegate = self;
     self.logoButton = [BCALogoButton createButtonWithDelegate:self assessmentId: nil urlScheme:@"brightcenterAppClient"];
     [self.view addSubview:self.logoButton];
 }
@@ -50,11 +49,20 @@
 }
 
 - (IBAction)loadResultsButtonClicked:(id)sender {
-    [_resultController loadResultsForAssessment:@"342f6bff-44bd-4a2b-82d3-790b73c5200c"];
+    [_resultController loadResultsForAssessment:@"342f6bff-44bd-4a2b-82d3-790b73c5200c" success:^(NSArray *results){
+        NSLog(@"results are loaded");
+    }failure:^(NSError *error, BOOL loginFailure){
+        NSLog(@"failure with loading results");
+    }];
 }
 
 - (IBAction)postResultButtonClicked:(id)sender {
-    [_resultController sendResultWithScore:4.0 duration:11 completionStatus:@"INCOMPLETE" assessmentId:@"342f6bff-44bd-4a2b-82d3-790b73c5200c" questionId:@"1"];
+    [_resultController sendResultWithScore:4.0 duration:11 completionStatus:@"INCOMPLETE" assessmentId:@"342f6bff-44bd-4a2b-82d3-790b73c5200c" questionId:@"1"
+            success:^(void){
+                NSLog(@"post succes");
+            } failure:^(NSError *error, BOOL loginFailure){
+                NSLog(@"post failure");
+            }];
 }
 - (IBAction)connectWithoutAssessmentClicked:(id)sender {
     BCAAppSwitchController *appSwitchController = [BCAAppSwitchController instance];
@@ -65,23 +73,6 @@
 - (void) appIsOpened:(NSString *) assessmentId{
     NSLog(@"app is opened");
     _studentLabel.text = [NSString stringWithFormat:@"Student: %@ %@ %@\n %@ %@", _resultController.student.firstName, _resultController.student.lastName, _resultController.student.id, _resultController.cookieString, assessmentId];
-}
-
-- (void) resultsAreLoaded:(NSArray *) results{
-    NSLog(@"results are loaded");
-}
-
-- (void) networkError:(int)statusCode{
-    NSLog(@"something went wrong with the request");
-    if(statusCode == 403){
-        NSLog(@"cookie is not valid anymore");
-    }else if (statusCode == 404){
-        NSLog(@"resource not found!");
-    }
-}
-
-- (void) resultIsSend{
-    NSLog(@"result send correctly");
 }
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{

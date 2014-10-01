@@ -30,7 +30,7 @@
     client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:@"http://www.brightcenter.nl/"]];
 }
 
-- (void) sendResultWithScore:(double) score duration:(int) duration completionStatus:(NSString *) completionStatus assessmentId:(NSString *) assessmentId questionId:(NSString *) questionId{
+- (void) sendResultWithScore:(double) score duration:(int) duration completionStatus:(NSString *) completionStatus assessmentId:(NSString *) assessmentId questionId:(NSString *) questionId success:(void (^)()) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure{
     NSString *path = [NSString stringWithFormat: @"dashboard/api/assessment/%@/student/%@/assessmentItemResult/%@", assessmentId, _student.id, questionId];
     NSMutableURLRequest *urlRequest = [client requestWithMethod:@"POST"
                                                            path:path
@@ -48,22 +48,16 @@
     urlRequest.HTTPBody = [NSJSONSerialization dataWithJSONObject:requestJson options:0 error:nil];
     
     void (^httpSuccess)(NSURLRequest *, NSHTTPURLResponse *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, id json) {
-        if([self.resultControllerDelegate respondsToSelector:@selector(resultIsSend)]){
-            [self.resultControllerDelegate resultIsSend];
-        }
-    };
-    
-    void (^httpFailure)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id o) {
-        if([self.resultControllerDelegate respondsToSelector:@selector(networkError:)]){
-            [self.resultControllerDelegate networkError:(int)response.statusCode];
-        }
+            if(success){
+                success();
+            }
     };
     
     [[AFJSONRequestOperation JSONRequestOperationWithRequest:urlRequest success:httpSuccess
-                                                     failure:httpFailure] start];
+                                                     failure:[self createHttpFailureCallback:failure]] start];
 }
 
-- (void) loadResultsForAssessment:(NSString *) assessmentId{
+- (void) loadResultsForAssessment:(NSString *) assessmentId success: (void (^)(NSArray *assessmentItemResults)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure{
     if (assessmentId.length == 0) {
         NSLog(@"ERROR - BCStudentsRepository.loadAssessmentItemResults: assessment.id cannot be nil");
         return;
@@ -109,20 +103,28 @@
             result.assessmentId = assessmentId;
             [results addObject:result];
         }
-        
-        [self.resultControllerDelegate resultsAreLoaded:results];
-    };
-    
-    void (^httpFailure)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id o) {
-        if([self.resultControllerDelegate respondsToSelector:@selector(networkError:)]){
-            [self.resultControllerDelegate networkError:response.statusCode];
+        if(success){
+            success(results);
         }
     };
     
+
+    
     
     [[AFJSONRequestOperation JSONRequestOperationWithRequest:urlRequest success:httpSuccess
-                                                     failure:httpFailure] start];
+                                                     failure:[self createHttpFailureCallback:failure]] start];
 
+}
+
+- (void (^)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id)) createHttpFailureCallback:(void (^)(NSError *, BOOL)) failure {
+    void (^httpFailure)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id o) {
+        BOOL loginFailed = response.statusCode == 403;
+        NSLog(@"ERROR - BCStudentsRepository: request failed: %@", error);
+        if (failure) {
+            failure(error, loginFailed);
+        }
+    };
+    return httpFailure;
 }
 
 @end
