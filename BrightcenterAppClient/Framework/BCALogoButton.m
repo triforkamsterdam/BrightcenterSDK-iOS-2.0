@@ -22,11 +22,11 @@
     CGRect screenRect = CGRectMake(0, 0, [button screenSize].width, [button screenSize].height);
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
-    button.frame = CGRectMake(screenWidth - 200, screenHeight - 200, 240, 240);;
+    button.frame = CGRectMake(screenWidth - 150, screenHeight - 150, 240, 240);;
     
     int baseOrigin = 50;
-    int stepSize = 30;
-    int baseSize = 130;
+    int stepSize = 20;
+    int baseSize = 80;
     
     [button addSubview:[button createCircleWithX:baseOrigin Y:baseOrigin size:baseSize color:[UIColor orangeColor]]];
     [button addSubview:[button createCircleWithX:baseOrigin + (stepSize / 2) Y:baseOrigin + (stepSize / 2) size:baseSize - stepSize color:[UIColor whiteColor]]];
