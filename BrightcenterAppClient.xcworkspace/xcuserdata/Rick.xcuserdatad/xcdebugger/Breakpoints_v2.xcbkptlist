@@ -25,13 +25,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BrightcenterAppClient/Framework/BCAAppSwitchController.m"
-            timestampString = "433075269.319483"
+            filePath = "BrightcenterAppClient/BCAAppDelegate.m"
+            timestampString = "443538883.416666"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
-            landmarkName = "-alertView:clickedButtonAtIndex:"
+            startingLineNumber = "19"
+            endingLineNumber = "19"
+            landmarkName = "-application:didFinishLaunchingWithOptions:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

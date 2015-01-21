@@ -22,7 +22,10 @@
 }
 
 - (void) openBrightcenterAppWithAssessmentId:(NSString *) assessmentId urlScheme:(NSString *) urlScheme{
-    NSString *urlString = [NSString stringWithFormat:@"brightcenterApp://protocolName/%@/assessmentId/%@", urlScheme, assessmentId];
+    NSString *urlString = [NSString stringWithFormat:@"brightcenterApp://?protocolName=%@", urlScheme];
+    if(assessmentId != nil){
+        urlString = [NSString stringWithFormat:@"%@&assessmentId=%@", urlString, assessmentId];
+    }
     NSURL *url = [NSURL URLWithString:urlString];
     if([[UIApplication sharedApplication] canOpenURL:url]){
         [[UIApplication sharedApplication] openURL:url];
@@ -43,46 +46,31 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1){
-        //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"URL NEEDS TO BE REPLACED WHEN IN PRODUCTION"]];
+        [[UIApplication sharedApplication] openURL: [NSURL URLWithString:@"https://itunes.apple.com/"]];
     }
 }
 
 - (void) configureWithUrl:(NSURL *) url{
-    _resultController.cookieString = [NSString stringWithFormat:@"JSESSIONID=%@", [self getCookieFromUrlString:[url path]]];
-    _resultController.assessmentIdFromUrl = [self getAssessmentIdFromUrlString:[url path]];
+    NSString *query = url.query;
+    NSArray *components = [query componentsSeparatedByString:@"&"];
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+    for (NSString *component in components) {
+        NSArray *subcomponents = [component componentsSeparatedByString:@"="];
+        [parameters setObject:[[subcomponents objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
+                       forKey:[[subcomponents objectAtIndex:0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    }
     
-    NSString *dataString = [self getDataStringFromUrlString:[url path]];
+    _resultController.cookieString = [NSString stringWithFormat:@"JSESSIONID=%@", [parameters objectForKey:@"cookie"]];
+    _resultController.assessmentIdFromUrl = [parameters objectForKey:@"assessmentId"];
+    
+    NSString *dataString = [parameters objectForKey:@"data"];
+    dataString = [dataString stringByReplacingOccurrencesOfString:@"*" withString:@"="];
     NSData *data = [[NSData alloc] initWithBase64EncodedString:dataString options:kNilOptions];
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     
     
     _resultController.student = [[BCStudent alloc] initWithId:[dict valueForKey:@"personId"] firstName:[dict valueForKey:@"firstName"] lastName:[dict valueForKey:@"lastName"]];
     [self.appSwitchDelegate appIsOpened: _resultController.assessmentIdFromUrl];
-}
-
-- (NSString *) getDataStringFromUrlString:(NSString *) path{
-    NSRegularExpression *regex1 = [NSRegularExpression regularExpressionWithPattern:@"/cookie.*" options:0 error:nil];
-    NSString *dataString = [regex1 stringByReplacingMatchesInString:path options:0 range:NSMakeRange(0, [path length]) withTemplate:@""];
-    dataString = [dataString stringByReplacingOccurrencesOfString:@"/" withString:@""];
-    return dataString;
-}
-
-- (NSString *) getCookieFromUrlString:(NSString *) path{
-    NSRegularExpression *regex1 = [NSRegularExpression regularExpressionWithPattern:@".*/cookie/" options:0 error:nil];
-    NSRegularExpression *regex2 = [NSRegularExpression regularExpressionWithPattern:@"/assessmentId.*" options:0 error:nil];
-    NSString *cookie = [regex1 stringByReplacingMatchesInString:path options:0 range:NSMakeRange(0, [path length]) withTemplate:@""];
-    cookie = [regex2 stringByReplacingMatchesInString:cookie options:0 range:NSMakeRange(0, [cookie length]) withTemplate:@""];
-    return cookie;
-}
-
-- (NSString *) getAssessmentIdFromUrlString:(NSString *) path{
-    NSRegularExpression *regex1 = [NSRegularExpression regularExpressionWithPattern:@".*/assessmentId" options:0 error:nil];
-    NSString *assessmentId = [regex1 stringByReplacingMatchesInString:path options:0 range:NSMakeRange(0, [path length]) withTemplate:@""];
-    assessmentId = [assessmentId stringByReplacingOccurrencesOfString:@"/" withString:@""];
-    if([assessmentId isEqual:[NSNull null]]){
-        assessmentId = @"";
-    }
-    return assessmentId;
 }
 
 @end

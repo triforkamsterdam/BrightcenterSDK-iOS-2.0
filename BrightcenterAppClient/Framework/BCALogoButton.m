@@ -47,20 +47,9 @@
 }
 
 - (void) buttonAction:(BCALogoButton *) button{
-    self.appSwitchDelegate = button.appSwitchDelegate;
-    self.assessmentId = button.assessmentId;
-    self.urlScheme = button.urlScheme;
-    NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
-    NSString *message;
-    UIAlertView *alert;
-    if([language isEqualToString:@"nl"]){
-        message = @"Je staat op het punt om in te loggen bij Brightcenter, hiervoor is een account nodig. Wil je doorgaan?";
-        alert = [[UIAlertView alloc] initWithTitle:@"Waarschuwing" message:message delegate:self cancelButtonTitle:@"Nee" otherButtonTitles:@"Ja", nil];
-    }else{
-        message = @"You are about to login to Brightcenter, you'll need an account to do this. Are you sure you want to continue?";
-        alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:message delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-    }
-    [alert show];
+    BCAAppSwitchController *appSwitchController = [BCAAppSwitchController instance];
+    appSwitchController.appSwitchDelegate = button.appSwitchDelegate;
+    [appSwitchController openBrightcenterAppWithAssessmentId:button.assessmentId urlScheme:button.urlScheme];
 }
 
 - (UIImageView *) createCircleWithX:(int) x Y:(int) y size:(int) size color:(UIColor *) color{
