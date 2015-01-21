@@ -87,56 +87,26 @@ The assessmentId can also be `@""` (empty). When the brightcenter app opens your
 after this method is called you are able to send and retrieve results! The assessmentId can be used to load an assessment instantly, note that it could also be nil if a student didn't pick a specific assessment. It can be ignored.
 
 ##Retrieving results
-To retrieve a result you can use the following(note that your class needs to implement the ResultControllerDelegate protocol):
+To retrieve a result you can use the following
 ```objective-c
     BCAResultController *resultController = [BCAResultController instance];
-    resultController.resultControllerDelegate = self;
-    [resultController loadResultsForAssessment:@"YOURASSESSMENTID"];
+    [_resultController loadResultsForAssessment:@"ASSESSMENTID" success:^(NSArray *results){
+        NSLog(@"results are loaded");
+    }failure:^(NSError *error, BOOL loginFailure){
+        NSLog(@"failure with loading results");
+    }];
 ```
-This retrieves the result of the currently logged in student for the given assessment. After this the following delegate with the results will be called if everything went oke:
-```objective-c
-- (void) resultsAreLoaded:(NSArray *) results{
-    //Do whatever you want with the results
-}
-```
-
-When something goes wrong the following delegate will be called:
-```objective-c
-- (void) networkError:(int)statusCode{
-    NSLog(@"something went wrong with the request");
-    if(statusCode == 403){
-        NSLog(@"cookie is not valid anymore");
-    }else if (statusCode == 404){
-        NSLog(@"resource not found!");
-    }
-}
-```
-These are the common exceptions but feel free to add in whatever you want!
 
 ##Sending results
 To send a result you can use the following:
 ```objective-c
-[_resultController sendResultWithScore:(double) duration:(double) completionStatus:@"INCOMPLETE" assessmentId:@"YOURASSESSMENTID" questionId:@"QUESTIONID"];
+[_resultController sendResultWithScore:(double) duration:(double) completionStatus:@"INCOMPLETE" assessmentId:@"YOURASSESSMENTID" questionId:@"QUESTIONID"
+            success:^(void){
+                NSLog(@"post succes");
+            } failure:^(NSError *error, BOOL loginFailure){
+                NSLog(@"post failure");
+            }];
 ```
-when the result is send succesfully the following delegate function is called:
-```objective-c
-    - (void) resultIsSend{
-        //do something
-    }
-```
-
-When something goes wrong the following delegate will be called:
-```objective-c
-- (void) networkError:(int)statusCode{
-    NSLog(@"something went wrong with the request");
-    if(statusCode == 403){
-        NSLog(@"cookie is not valid anymore");
-    }else if (statusCode == 404){
-        NSLog(@"resource not found!");
-    }
-}
-```
-These are the common exceptions but feel free to add in whatever you want!
 
 
 ##Brightcenter Logo button
