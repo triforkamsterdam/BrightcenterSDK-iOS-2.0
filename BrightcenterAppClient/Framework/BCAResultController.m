@@ -27,7 +27,7 @@
 }
 
 - (void) configure{
-    client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:@"http://www.brightcenter.nl/"]];
+    client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:@"https://www.brightcenter.nl/"]];
 }
 
 - (void) sendResultWithScore:(double) score duration:(int) duration completionStatus:(NSString *) completionStatus assessmentId:(NSString *) assessmentId questionId:(NSString *) questionId success:(void (^)()) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure{
