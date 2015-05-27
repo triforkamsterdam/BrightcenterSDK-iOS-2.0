@@ -25,7 +25,7 @@ See also: http://cocoapods.org
 Go to your XCode project directory and create a text file called `PodFile` with the following contents:
 
     platform :ios, '7.0'
-    pod 'BrightcenterSDK-2.0',  '~> 0.9.04'
+    pod 'BrightcenterSDK-2.0',  '~> 0.9.16'
 
 Now open a terminal and change to your XCode project directory. Run the command `pod install`. That's it!
 Open the generated YourApp.xcworkspace file with XCode or AppCode (instead of YourApp.xcodeproj).
