@@ -14,7 +14,7 @@
 - (void) appIsOpened:(NSString *) assessmentId;
 @end
 
-@interface BCAAppSwitchController : NSObject
+@interface BCAAppSwitchController : NSObject <UITextFieldDelegate>
 
 @property (nonatomic, strong) BCAResultController *resultController;
 @property (nonatomic, strong) id <AppSwitchDelegate> appSwitchDelegate;

@@ -10,6 +10,11 @@
 
 @implementation BCAAppSwitchController
 
+bool parentalLocked = true;
+int code;
+NSString *codeString;
+NSURL *lockUrl;
+
 + (BCAAppSwitchController *) instance{
     static BCAAppSwitchController *_instance = nil;
     @synchronized(self){
@@ -28,7 +33,13 @@
     }
     NSURL *url = [NSURL URLWithString:urlString];
     if([[UIApplication sharedApplication] canOpenURL:url]){
-        [[UIApplication sharedApplication] openURL:url];
+        if (parentalLocked) {
+            lockUrl = url;
+            [self showParentalGate];
+            parentalLocked = false;
+        } else {
+            [[UIApplication sharedApplication] openURL:url];
+        }
     }else{
         UIAlertView *alert;
         NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
@@ -40,13 +51,107 @@
             message = @"You don't have the Brightcenter App installed on this device. Please install it to use Brightcenter functionality.";
             alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"Open in Appstore", nil];
         }
+        lockUrl = [NSURL URLWithString:@"http://itunes.com/apps/brightcenter"];
         [alert show];
     }
 }
 
+- (void) showParentalGate {
+    UIAlertView *alert;
+    NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
+    NSString *message;
+    
+    code = arc4random() % 90000 + 10000;
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    [formatter setNumberStyle:NSNumberFormatterSpellOutStyle];
+    
+    [self createCodeString];
+    
+    if([language isEqualToString:@"nl"]){
+        message = [NSString stringWithFormat: @"Vul de code in om door te gaan: \n%@", codeString];
+        alert = [[UIAlertView alloc] initWithTitle:@"Alleen voor ouders \n(of leraren)!" message:message delegate:self cancelButtonTitle:@"Terug" otherButtonTitles:@"Doorgaan",nil];
+    }else{
+        message = [NSString stringWithFormat: @"Enter the code to continue: \n%@", codeString];
+        alert = [[UIAlertView alloc] initWithTitle:@"Parents (or teachers) only!" message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
+    }
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [[alert textFieldAtIndex:0] setDelegate:self];
+    [[alert textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeNumberPad];
+    [[alert textFieldAtIndex:0] becomeFirstResponder];
+    [alert show];
+}
+
+- (void) prependNumber:(NSString *)num {
+    codeString = [NSString stringWithFormat:@"%@ %@", num, codeString];
+}
+
+
+-(void) createCodeString  {
+    codeString = @"";
+    int parentcode = code;
+    NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
+   
+    do
+    {
+        int digit = parentcode % 10;
+        
+        switch (digit) {
+            case 0:
+                [language isEqualToString:@"nl"] ? [self prependNumber:@"NUL"] : [self prependNumber:@"ZERO"];
+                break;
+            case 1:
+                [language isEqualToString:@"nl"] ? [self prependNumber:@"EEN"] : [self prependNumber:@"ONE"];
+                break;
+            case 2:
+                [language isEqualToString:@"nl"] ? [self prependNumber:@"TWEE"] : [self prependNumber:@"TWO"];
+                break;
+            case 3:
+                [language isEqualToString:@"nl"] ? [self prependNumber:@"DRIE"] : [self prependNumber:@"THREE"];
+                break;
+            case 4:
+                [language isEqualToString:@"nl"] ? [self prependNumber:@"VIER"] : [self prependNumber:@"FOUR"];
+                break;
+            case 5:
+                [language isEqualToString:@"nl"] ? [self prependNumber:@"VIJF"] : [self prependNumber:@"FIVE"];
+                break;
+            case 6:
+                [language isEqualToString:@"nl"] ? [self prependNumber:@"ZES"] : [self prependNumber:@"SIX"];
+                break;
+            case 7:
+                [language isEqualToString:@"nl"] ? [self prependNumber:@"ZEVEN"] : [self prependNumber:@"SEVEN"];
+                break;
+            case 8:
+                [language isEqualToString:@"nl"] ? [self prependNumber:@"ACHT"] : [self prependNumber:@"EIGHT"];
+                break;
+            case 9:
+                [language isEqualToString:@"nl"] ? [self prependNumber:@"NEGEN"] : [self prependNumber:@"NINE"];
+                break;
+            default:
+                break;
+        }
+        parentcode /= 10;
+    }
+    while (parentcode != 0);
+
+}
+
+
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1){
-        [[UIApplication sharedApplication] openURL: [NSURL URLWithString:@"https://itunes.apple.com/"]];
+    if (alertView.alertViewStyle == UIAlertViewStyleDefault) {
+        if (buttonIndex == 1){
+            [self showParentalGate];
+        }
+    } else {
+        if (buttonIndex == 1){
+            int input = [[alertView textFieldAtIndex:0] text].intValue;
+            if (input == code) {
+                [[alertView textFieldAtIndex:0] resignFirstResponder];
+                [[UIApplication sharedApplication] openURL: lockUrl];
+            } else {
+                [self showParentalGate];
+            }
+        }
     }
 }
 
