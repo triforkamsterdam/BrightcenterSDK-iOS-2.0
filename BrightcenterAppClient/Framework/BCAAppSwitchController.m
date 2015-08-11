@@ -36,7 +36,6 @@ NSURL *lockUrl;
         if (parentalLocked) {
             lockUrl = url;
             [self showParentalGate];
-            parentalLocked = false;
         } else {
             [[UIApplication sharedApplication] openURL:url];
         }
@@ -67,16 +66,15 @@ NSURL *lockUrl;
     
     [self createCodeString];
     
-    if([language isEqualToString:@"nl"]){
-        message = [NSString stringWithFormat: @"Vul de code in om door te gaan: \n%@", codeString];
-        alert = [[UIAlertView alloc] initWithTitle:@"Alleen voor ouders \n(of leraren)!" message:message delegate:self cancelButtonTitle:@"Terug" otherButtonTitles:@"Doorgaan",nil];
-    }else{
-        message = [NSString stringWithFormat: @"Enter the code to continue: \n%@", codeString];
-        alert = [[UIAlertView alloc] initWithTitle:@"Parents (or teachers) only!" message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
-    }
+    NSString *msgString = [language isEqualToString:@"nl"]
+    ? @"Vul de onderstaande code in als getallen om door te gaan met het gebruik van Brightcenter: \n%@"
+    : @"Enter the following code as digits to continue using Brightcenter: \n%@";
+    message = [NSString stringWithFormat: msgString, codeString];
+    alert = [[UIAlertView alloc] initWithTitle:@"Brightcenter" message:message delegate:self cancelButtonTitle:@"Terug" otherButtonTitles:@"Doorgaan",nil];
+    
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     [[alert textFieldAtIndex:0] setDelegate:self];
-    [[alert textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeNumberPad];
+    [[alert textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeDecimalPad];
     [[alert textFieldAtIndex:0] becomeFirstResponder];
     [alert show];
 }
@@ -90,7 +88,7 @@ NSURL *lockUrl;
     codeString = @"";
     int parentcode = code;
     NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
-   
+    
     do
     {
         int digit = parentcode % 10;
@@ -132,7 +130,7 @@ NSURL *lockUrl;
         parentcode /= 10;
     }
     while (parentcode != 0);
-
+    
 }
 
 
@@ -148,6 +146,7 @@ NSURL *lockUrl;
             if (input == code) {
                 [[alertView textFieldAtIndex:0] resignFirstResponder];
                 [[UIApplication sharedApplication] openURL: lockUrl];
+                parentalLocked = false;
             } else {
                 [self showParentalGate];
             }
