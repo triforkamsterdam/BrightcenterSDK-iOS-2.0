@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "BrightcenterSDK-2.0"
-  s.version      = "0.9.17"
+  s.version      = "0.9.18"
   s.summary      = "SDK to integrate to the Brightcenter backend in an easier way"
 
   s.homepage     = "https://github.com/triforkamsterdam/BrightcenterSDK-iOS-2.0"
@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 
   s.platform     = :ios, '5.0'
 
-  s.source       = { :git => "https://github.com/triforkamsterdam/BrightcenterSDK-iOS-2.0.git", :tag => "0.9.17" }
+  s.source       = { :git => "https://github.com/triforkamsterdam/BrightcenterSDK-iOS-2.0.git", :tag => "0.9.18" }
   s.ios.frameworks = 'CoreGraphics','QuartzCore'
 
   s.source_files  = 'BrightcenterAppClient/Framework/*.{h,m}'

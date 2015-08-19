@@ -40,25 +40,43 @@ NSURL *lockUrl;
             [[UIApplication sharedApplication] openURL:url];
         }
     }else{
-        UIAlertView *alert;
         NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
         NSString *message;
+        NSString *title;
+        
         if([language isEqualToString:@"nl"]){
             message = @"De Brightcenter app is niet geinstalleerd op dit apparaat. Installeer deze om Brightcenter functionaliteiten te gebruiken.";
-            alert = [[UIAlertView alloc] initWithTitle:@"Waarschuwing" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"Openen in Appstore",nil];
+            title = @"Waarschuwing";
         }else{
             message = @"You don't have the Brightcenter App installed on this device. Please install it to use Brightcenter functionality.";
-            alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"Open in Appstore", nil];
+            title = @"Warning";
         }
+        
         lockUrl = [NSURL URLWithString:@"http://itunes.com/apps/brightcenter"];
-        [alert show];
+        
+        if ([UIAlertController class]) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction: [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleCancel handler:NULL]];
+            [alert addAction:[UIAlertAction actionWithTitle:@"Open in Appstore" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                [self showParentalGate];
+            }]];
+            UIViewController *topMostController = [self topMostController];
+            [topMostController presentViewController:alert animated:TRUE completion:nil];
+        } else {
+            UIAlertView *alert;
+            alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"Open in Appstore", nil];
+            [alert show];
+        }
+        
     }
 }
 
 - (void) showParentalGate {
-    UIAlertView *alert;
     NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
     NSString *message;
+    NSString *msgString;
+    NSString *back;
+    NSString *cntinue;
     
     code = arc4random() % 90000 + 10000;
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
@@ -66,17 +84,48 @@ NSURL *lockUrl;
     
     [self createCodeString];
     
-    NSString *msgString = [language isEqualToString:@"nl"]
-    ? @"Vul de onderstaande code in als getallen om door te gaan met het gebruik van Brightcenter: \n%@"
-    : @"Enter the following code as digits to continue using Brightcenter: \n%@";
-    message = [NSString stringWithFormat: msgString, codeString];
-    alert = [[UIAlertView alloc] initWithTitle:@"Brightcenter" message:message delegate:self cancelButtonTitle:@"Terug" otherButtonTitles:@"Doorgaan",nil];
+    if ([language isEqualToString:@"nl"]) {
+        msgString = @"Vul de onderstaande code in als getallen om door te gaan met het gebruik van Brightcenter: \n%@";
+        back = @"Terug";
+        cntinue = @"Doorgaan";
+    } else {
+        msgString = @"Enter the following code as digits to continue using Brightcenter: \n%@";
+        back = @"Back";
+        cntinue = @"Continue";
+    }
     
-    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-    [[alert textFieldAtIndex:0] setDelegate:self];
-    [[alert textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeDecimalPad];
-    [[alert textFieldAtIndex:0] becomeFirstResponder];
-    [alert show];
+    message = [NSString stringWithFormat: msgString, codeString];
+    
+    if ([UIAlertController class]) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Brightcenter" message:message preferredStyle:UIAlertControllerStyleAlert];
+        [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+            textField.placeholder = @"Code";
+            [textField setKeyboardType:UIKeyboardTypeDecimalPad];
+        }];
+        [alert addAction: [UIAlertAction actionWithTitle:back style:UIAlertActionStyleCancel handler:nil]];
+        [alert addAction: [UIAlertAction actionWithTitle:cntinue style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            int input = ((UITextField *)[alert.textFields objectAtIndex:0]).text.intValue;
+            if (input == code) {
+//                [[alertView textFieldAtIndex:0] resignFirstResponder];
+                [[UIApplication sharedApplication] openURL: lockUrl];
+                parentalLocked = false;
+            } else {
+                [self showParentalGate];
+            }
+        }]];
+        
+        [[self topMostController] presentViewController:alert animated:TRUE completion:nil];
+    
+    
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Brightcenter" message:message delegate:self cancelButtonTitle:@"Terug" otherButtonTitles:@"Doorgaan",nil];
+        
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [[alert textFieldAtIndex:0] setDelegate:self];
+        [[alert textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeDecimalPad];
+        [[alert textFieldAtIndex:0] becomeFirstResponder];
+        [alert show];
+    }
 }
 
 - (void) prependNumber:(NSString *)num {
@@ -177,6 +226,17 @@ NSURL *lockUrl;
     [self.appSwitchDelegate appIsOpened: _resultController.assessmentIdFromUrl];
 }
 
+
+- (UIViewController*) topMostController
+{
+    UIViewController *topController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    
+    while (topController.presentedViewController) {
+        topController = topController.presentedViewController;
+    }
+    
+    return topController;
+}
 @end
 
 
