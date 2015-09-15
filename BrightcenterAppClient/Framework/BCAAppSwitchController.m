@@ -23,6 +23,9 @@ NSURL *lockUrl;
             _instance.resultController = [BCAResultController instance];
         }
     }
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"parentalGateUnlocked"]) {
+        parentalLocked = false;
+    }
     return _instance;
 }
 
@@ -96,6 +99,7 @@ NSURL *lockUrl;
     
     message = [NSString stringWithFormat: msgString, codeString];
     
+    // iOS 8.0 and later
     if ([UIAlertController class]) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Brightcenter" message:message preferredStyle:UIAlertControllerStyleAlert];
         [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
@@ -106,17 +110,16 @@ NSURL *lockUrl;
         [alert addAction: [UIAlertAction actionWithTitle:cntinue style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             int input = ((UITextField *)[alert.textFields objectAtIndex:0]).text.intValue;
             if (input == code) {
-//                [[alertView textFieldAtIndex:0] resignFirstResponder];
                 [[UIApplication sharedApplication] openURL: lockUrl];
+                [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"parentalGateUnlocked"];
                 parentalLocked = false;
             } else {
                 [self showParentalGate];
             }
         }]];
-        
         [[self topMostController] presentViewController:alert animated:TRUE completion:nil];
-    
-    
+   
+    // iOS 7 and lower
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Brightcenter" message:message delegate:self cancelButtonTitle:@"Terug" otherButtonTitles:@"Doorgaan",nil];
         
@@ -196,6 +199,7 @@ NSURL *lockUrl;
                 [[alertView textFieldAtIndex:0] resignFirstResponder];
                 [[UIApplication sharedApplication] openURL: lockUrl];
                 parentalLocked = false;
+                [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"parentalGateUnlocked"];
             } else {
                 [self showParentalGate];
             }
